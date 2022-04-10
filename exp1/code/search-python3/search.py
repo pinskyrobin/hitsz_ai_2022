@@ -17,6 +17,9 @@ In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
 
+from cmath import cos
+from operator import ge
+from tkinter import N
 import util
 
 class SearchProblem:
@@ -72,6 +75,38 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
+def general_search(problem, fringe, iter_fn):
+    """
+    General search code template.
+
+    problem: SearchProblem
+    fringe: A container that implements a push/pop sequence.
+            Elements are (node, action, cost) pairs.
+    iter_fn: A function that takes a fringe and a state (and cost for option)
+
+    successor: (node, action, cost) pairs
+    """
+
+    closed = set()
+    state = (problem.getStartState(), [], 0)
+    iter_fn(fringe, state, 0)
+
+    while not fringe.isEmpty():
+
+        (node, action, cost) = fringe.pop()
+
+        if problem.isGoalState(node):
+            return action
+
+        if not node in closed:
+            closed.add(node)
+
+        for successor in problem.getSuccessors(node):
+            _cost = cost + successor[2]
+            _action = action + [successor[1]]
+            _state = (successor[0], _action, _cost)
+            iter_fn(fringe, _state, _cost)
+
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -87,17 +122,23 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    return general_search(problem, util.Stack(),
+        lambda fringe, state, _ : fringe.push(state))
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    return general_search(problem, util.Queue(),
+        lambda fringe, state, _ : fringe.push(state))
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    return general_search(problem, util.PriorityQueue(),
+        lambda fringe, state, cost : fringe.push(state, cost))
 
 def nullHeuristic(state, problem=None):
     """
@@ -109,7 +150,9 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    return general_search(problem, util.PriorityQueue(),
+        lambda fringe, state, cost : fringe.push(state, cost + heuristic(state[0], problem)))
 
 
 # Abbreviations
