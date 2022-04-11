@@ -41,7 +41,7 @@ pacman是加州大学伯克利分校开源的人工智能实验项目，实验
 ├── testParser.py   
 ├── test_cases  
 ├── textDisplay.py  
-└── util.py 
+└── util.py     
 加粗的两个文件是本次实验需要编辑的
 ### 注意事项
 #### `python autograder.py` 报错问题
