@@ -101,11 +101,12 @@ def general_search(problem, fringe, iter_fn):
         if not node in closed:
             closed.add(node)
 
-        for successor in problem.getSuccessors(node):
-            _cost = cost + successor[2]
-            _action = action + [successor[1]]
-            _state = (successor[0], _action, _cost)
-            iter_fn(fringe, _state, _cost)
+            for successor in problem.getSuccessors(node):
+                _cost = cost + successor[2]
+                _action = action + [successor[1]]
+                _state = (successor[0], _action, _cost)
+                iter_fn(fringe, _state, _cost)
+
 
 def depthFirstSearch(problem):
     """
