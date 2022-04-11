@@ -15,6 +15,7 @@
 "Common code for autograders"
 
 import cgi
+import html
 import time
 import sys
 import json

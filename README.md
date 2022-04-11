@@ -43,3 +43,9 @@ pacman是加州大学伯克利分校开源的人工智能实验项目，实验
 ├── textDisplay.py
 └── util.py
 加粗的两个文件是本次实验需要编辑的
+### 注意事项
+#### `python autograder.py` 报错问题
+
+参考 [AttributeError: module 'cgi' has no attribute 'escape'](https://stackoverflow.com/questions/62470666/getting-this-error-with-py2-7-as-well-as-with-py3-7) 解决。
+简单来说，需要在文件中添加语句 `import html`，然后用 `html.escape` 代替
+`cgi.escape`
