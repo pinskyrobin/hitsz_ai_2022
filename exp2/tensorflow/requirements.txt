@@ -1,0 +1,10 @@
+matplotlib==3.3.3
+numpy==1.22.3
+opencv_python==4.5.5.64
+Pillow==9.1.0
+scikit_learn==1.0.2
+tensorflow==2.8.0
+
+# Requirement below is ONLY available on macOS 12
+# GPU requirement: AMD or Apple Silicon
+# tensorflow_macos==2.8.0
