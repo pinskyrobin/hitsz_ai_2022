@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -33,7 +33,7 @@ description for details.
 
 Good luck and happy searching!
 """
-
+import searchAgents
 from game import Directions
 from game import Agent
 from game import Actions
@@ -288,6 +288,8 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        self.top = top
+        self.right = right
 
     def getStartState(self):
         """
@@ -295,14 +297,18 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        FourCorners = (False, False, False, False)
+        StartState = (self.startingPosition, FourCorners)
+        return StartState
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        isGoal = state[1] in [(True, True, True, True)]
+        return isGoal
+
 
     def getSuccessors(self, state):
         """
@@ -325,6 +331,24 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            x, y = state[0]
+            Corners = state[1]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            nextState = (nextx, nexty)
+
+            if not hitsWall:
+                nextCorners = list(Corners)
+                if nextState == (1, 1):
+                    nextCorners[0] = True
+                elif nextState == (1, self.top):
+                    nextCorners[1] = True
+                elif nextState == (self.right, 1):
+                    nextCorners[2] = True
+                elif nextState == (self.right, self.top):
+                    nextCorners[3] = True
+                successors.append(((nextState, tuple(nextCorners)), action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -360,7 +384,32 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    position = state[0]
+    stateCorners = state[1]
+    corners = problem.corners
+    node = []
+    # node列表：所有未到的角落
+    for i in range(0, len(corners)):
+        if not stateCorners[i]:
+            node.append(corners[i])
+    # 计算一个状态节点的启发值，类比贪心思想
+    current_Position = position
+    cost = 0
+    # 从输入的位置开始，计算与node列表的manhattanDistance，选出manhattanDistance最小的角落
+    while len(node) > 0:
+        # 把该manhattanDistance加进cost中，并将该角落从node列表删除，接着以该角落作为输入，计算与node列表的manhattanDistance
+        dist = []
+        # 一直操作，直至node列表为空
+        for i in node:
+            distance = util.manhattanDistance(current_Position, i)
+            dist.append(distance)
+        minimum_dist = min(dist)
+        cost += minimum_dist
+        minimum_dist_IN = dist.index(minimum_dist)
+        current_Position = node[minimum_dist_IN]
+        del node[minimum_dist_IN]
+    return cost
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -454,7 +503,32 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    foods_position = []
+    food_mutual_dist = ((0, 0), (0, 0), 0)
+
+    # 获取豆子的坐标
+    for i in range(0, foodGrid.width):
+        for j in range(0, foodGrid.height):
+            if (foodGrid[i][j] == True):
+                foods_position.append((i, j))
+    # 豆子已经被吃完
+    if (len(foods_position) == 0):
+        return 0
+    # 还有豆子,则找到manhattanDistance最远的两个豆子，作为一个豆子组
+    for current_food in foods_position:
+        for select_food in foods_position:
+            if (current_food != select_food):
+                distance = util.manhattanDistance(current_food, select_food)
+                if (distance > food_mutual_dist[2]):
+                    food_mutual_dist = (current_food, select_food, distance)
+    # 以当前位置到该豆子组的manhattanDistance的较小值加上与该豆子组的manhattanDistance作为启发函数
+    if (food_mutual_dist[0] == (0, 0) and food_mutual_dist[1] == (0, 0)):
+        result = util.manhattanDistance(position, foods_position[0])
+    else:
+        dist1 = util.manhattanDistance(position, food_mutual_dist[0])
+        dist2 = util.manhattanDistance(position, food_mutual_dist[1])
+        result = min(dist1, dist2) + food_mutual_dist[2]
+    return result
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -485,7 +559,7 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return search.breadthFirstSearch(problem)
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -521,7 +595,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return (True if(self.food[x][y]) else False)
 
 def mazeDistance(point1, point2, gameState):
     """
