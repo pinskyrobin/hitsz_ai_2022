@@ -35,3 +35,4 @@ ENV/
 *.sublime-project
 .ipynb_checkpoints
 *.h5
+*.docx
