@@ -174,6 +174,8 @@ def predict(model):
     imgs = np.asarray(imgs, np.float32)
     print("shape of data:", imgs.shape)
 
+    model = tf.saved_model.load('model') if is_trained else _model
+
     prediction = np.argmax(model.predict(imgs), axis=1)
 
     # Draw the prediction
@@ -185,10 +187,12 @@ def predict(model):
 
 
 if __name__ == '__main__':
-    x_train, x_val, y_train, y_val = preprocess()
+    # x_train, x_val, y_train, y_val = preprocess()
 
-    model = build()
+    # model = build()
 
-    model = train(model, x_train, y_train, x_val, y_val)
+    # model = train(model, x_train, y_train, x_val, y_val)
 
-    predict(model)
+    # predict(model)
+
+    predict(is_trained=True)
