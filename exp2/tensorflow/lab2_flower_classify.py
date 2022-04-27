@@ -17,23 +17,23 @@ from sklearn.model_selection import train_test_split
 # from tensorflow.python.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense
 # from keras_preprocessing.image import ImageDataGenerator
 
-# from tensorflow.keras.models import Sequential
-# from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten
-# from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten
-from keras.preprocessing.image import ImageDataGenerator
+# from keras.models import Sequential
+# from keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten
+# from keras.preprocessing.image import ImageDataGenerator
 
 
 # If following packages cannot be recognized,
 # please use please use "tensorflow.keras.optimizers" instead
 
 # from tensorflow.python.keras.optimizer_v2.gradient_descent import SGD
-from tensorflow.python.keras.optimizer_v2.adam import Adam
+# from tensorflow.python.keras.optimizer_v2.adam import Adam
 
 
-# from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 
 # Fix prediction failure in macOS environment
 # If this line raise any error, please just COMMENT it
